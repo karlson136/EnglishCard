@@ -28,28 +28,37 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(Dictionary.CREATE_DB_SQL);
+        sqLiteDatabase.execSQL(Dictionary.CREATE_TABLE_SQL);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL(Dictionary.DROP_DB_SQL);
+        sqLiteDatabase.execSQL(Dictionary.DROP_TABLE_SQL);
         onCreate(sqLiteDatabase);
     }
 
-    private static class Dictionary implements BaseColumns {
-        private static final String DATABASE_TABLE = "Dictionary";
+    public static class Dictionary implements BaseColumns {
+        private static final String TABLE_NAME = "Dictionary";
 
         public static final String ENGLISH_WORD = "englishWord";
-        public static final String RUSSIAN_WORD = "russianhWord";
+        public static final String RUSSIAN_WORD = "russianWord";
+        public static final String LEARNED = "learned";
 
-        private static final String CREATE_DB_SQL = String.format("create table %s ("
-                + "%s integer primary key autoincrement, "
-                + "%s text not null, "
-                + "%s text not null);", DATABASE_TABLE, BaseColumns._ID, ENGLISH_WORD, RUSSIAN_WORD);
+        private static final String CREATE_TABLE_SQL = "create table " + TABLE_NAME + " ("
+                + _ID + " integer primary key autoincrement, "
+                + ENGLISH_WORD + " text not null, "
+                + RUSSIAN_WORD + " text not null, "
+                + LEARNED + " integer not null default 0)";
 
-        public static final String DROP_DB_SQL = "DROP TABLE IF IT EXISTS " + DATABASE_TABLE;
+        public static final String DROP_TABLE_SQL = "drop table if it exists " + TABLE_NAME;
 
+        public static final String INSERT_TABLE_SQL = "insert into " + TABLE_NAME + "("
+                + ENGLISH_WORD + ", " + RUSSIAN_WORD + ") "
+                + "values ('%s', '%s')";
+
+        public static String insert(String englishWord, String russianWord) {
+            return String.format(INSERT_TABLE_SQL, englishWord, russianWord);
+        }
     }
 
 }
