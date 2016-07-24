@@ -1,5 +1,6 @@
 package com.andrey.englishcard;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -27,11 +28,11 @@ public class MainActivity extends AppCompatActivity {
                 if (currentWord.getEnglish().equals(userAnswer)) {
                     TextView result = (TextView) findViewById(R.id.result);
                     result.setText("Correct!");
-                    result.setTextColor(0x0000FF00);
+                    result.setTextColor(Color.rgb(0, 255, 0));
                 } else {
                     TextView result = (TextView) findViewById(R.id.result);
                     result.setText("Wrong: --> " + currentWord.getEnglish());
-                    result.setTextColor(0x00FF0000);
+                    result.setTextColor(Color.rgb(255, 0, 0));
                 }
             }
         });
