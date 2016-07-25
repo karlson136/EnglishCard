@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initDictionary();
+        initDictionaryStorage();
         setCurrentWord();
 
         findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         word.setText(currentWord.getRussian());
     }
 
-    private void initDictionary() {
+    private void initDictionaryStorage() {
         DictionaryStorage.putAll(DBHelper.getInstance(this).getUnlearnedWord());
     }
 }
