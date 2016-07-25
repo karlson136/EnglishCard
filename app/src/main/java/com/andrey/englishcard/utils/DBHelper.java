@@ -1,10 +1,16 @@
 package com.andrey.englishcard.utils;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.andrey.englishcard.utils.Pair.pair;
 
 /**
  * Created by andrey on 24.07.16.
@@ -29,6 +35,22 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(Dictionary.CREATE_TABLE_SQL);
+
+        List<Pair<String, String>> d;
+
+        d = new ArrayList<>();
+        d.add(pair("bumped", "нактнуться"));
+        d.add(pair("estate", "поместье"));
+        d.add(pair("resist", "сопротивляться"));
+        d.add(pair("prospect", "перспектива"));
+        d.add(pair("tenant", "арендатор"));
+        d.add(pair("harsh", "суровый"));
+        d.add(pair("plump", "жирный"));
+        d.add(pair("pond", "пруд"));
+
+        for (Pair<String, String> pair : d) {
+            sqLiteDatabase.execSQL(Dictionary.insert(pair.getEnglish(), pair.getRussian()));
+        }
     }
 
     @Override
@@ -56,9 +78,24 @@ public class DBHelper extends SQLiteOpenHelper {
                 + ENGLISH_WORD + ", " + RUSSIAN_WORD + ") "
                 + "values ('%s', '%s')";
 
+        public static final String FIND_ALL_UNLEARNED_SQL = "select " + ENGLISH_WORD + ", " + RUSSIAN_WORD + ", "
+                + LEARNED + " from " + TABLE_NAME + " where " + LEARNED + " = 0";
+
         public static String insert(String englishWord, String russianWord) {
             return String.format(INSERT_TABLE_SQL, englishWord, russianWord);
         }
     }
+
+    public List<Pair<String, String>> getUnlearnedWord() {
+        List<Pair<String, String>> result = new ArrayList<>();
+        Cursor cursor = getReadableDatabase().rawQuery(Dictionary.FIND_ALL_UNLEARNED_SQL, null);
+        while (cursor.moveToNext()) {
+            result.add(pair(cursor.getString(cursor.getColumnIndex(Dictionary.ENGLISH_WORD)),
+                    cursor.getString(cursor.getColumnIndex(Dictionary.RUSSIAN_WORD))));
+        }
+        cursor.close();
+        return result;
+    }
+
 
 }

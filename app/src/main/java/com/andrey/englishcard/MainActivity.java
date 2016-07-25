@@ -6,7 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.andrey.englishcard.utils.Dictionary;
+import com.andrey.englishcard.utils.DBHelper;
+import com.andrey.englishcard.utils.DictionaryStorage;
 import com.andrey.englishcard.utils.Pair;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        initDictionary();
         setCurrentWord();
 
         findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
@@ -45,11 +46,16 @@ public class MainActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.result)).setText("");
             }
         });
+
     }
 
     private void setCurrentWord() {
-        currentWord = Dictionary.getWord();
+        currentWord = DictionaryStorage.getWord();
         TextView word = (TextView) findViewById(R.id.word);
         word.setText(currentWord.getRussian());
+    }
+
+    private void initDictionary() {
+        DictionaryStorage.putAll(DBHelper.getInstance(this).getUnlearnedWord());
     }
 }
